@@ -3,25 +3,51 @@
   <script src='asyncReq.js'></script>
   <script src='jquery-3.3.1.min.js'></script>
   <style>
+  #theList button{
+      border: 0px;
+      padding: 0px;
+      min-width: 100%;
+      box-shadow: 0px 0px 1px;
+  }
+  #theList button h1,
+  #theList button h2
+  {
+    padding: 0px;
+    margin: 0px;
+    font-size: 20px;
+    line-height: 20px;
+    margin-bottom: 5px;
+    text-align: left;
+  }
+  #theList button h2
+  {
+    font-size: 15px;
+  }
+
+  #theList button img{
+      height: 100px;
+      width: 100px;
+      float: left;
+      margin-right: 5px;
+  }
+    #editButton{
+      float: right;
+      margin-top: -50px;
+      margin-right: 5px;
+    }
     #rssBox{
       float:left;
-      width: 100%;
-      min-height: 50%;
-      background: brown;
+      width: 250px;
+      min-height: 100%;
+      background: gray;
     } 
     #theDetails{
       float:right;
-      width: calc(100%);
-      min-height: 50%;
-      background: lightblue;
+      width: calc(100% - 250px);
+      min-height: 100%;
+      background: lightgray;
+      text-align:center;
     }
-	
-	#rssData {
-		
-		
-		
-	}
-
   </style>
   <script>
   function getDataFromServer(){
@@ -29,9 +55,6 @@
     var url = "https://rss.itunes.apple.com/api/v1/us/apple-music/hot-tracks/all/10/explicit.json";
     loadFile(url, function(resData){
       $("#result").val(resData);
-	  
-	  
-	  
     });
   }
 
@@ -40,6 +63,11 @@
   {
     var feedURL = prompt("Enter your RSS feed URL:");
     var url = "./getFeedData?url=" + feedURL;
+    loadRSS(url);
+  }
+
+  function loadRSS(url){
+    console.log(url);
     loadFile(url, function(resData){
       currRSSData = JSON.parse(resData).feed.results;
       //var markup = resData;
@@ -54,18 +82,21 @@
       $("#theList").html(markup);
     });
   }
-
   function itemSelected(n)
   {
     var data = currRSSData[n];
-    var markup = JSON.stringify(data);
+    var markup = "";
+    var thumbnail = data.artworkUrl100 || "";
+    var name = data.name || "";
+    var link = data.url || "";
+    console.log(data);
+
+    markup += "<img src='" + thumbnail + "'>";
+    markup += "<a target='_blank' href='" + link + "'><h1>" + name + "</h1></a>";
+
+
     $("#theDetails").html(markup);
-	
-	
-	
-	
-	
-	
+    //document.getElementById("theDetails").innerHTML = markup;
   }
   </script>
 
@@ -73,26 +104,11 @@
 
 <body>
 <div id='rssBox'>
-	<h1> Assignment 3 Sample RSS Reader </h1>
-  <button onclick='changeRSSSrc()'> Enter RSS Feed Here </button>
+	<h1> RSS Reader </h1>
+  <button id='editButton' onclick='changeRSSSrc()'> Edit </button>
   <div id='theList'></div>
 </div>
 <div id='theDetails'></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </body>
 </html>
